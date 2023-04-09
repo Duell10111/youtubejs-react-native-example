@@ -8,6 +8,13 @@
 import type { PropsWithChildren } from "react";
 import React, { useEffect } from "react";
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from "react-native";
+import {btoa, atob} from 'react-native-quick-base64';
+
+// For non server version?
+Object.assign(global, {
+  btoa: btoa,
+  atob: atob,
+});
 
 import {
   Colors,
@@ -16,8 +23,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions
 } from "react-native/Libraries/NewAppScreen";
-import Innertube, {ClientType} from './react-native';
-import { VideoInfo } from "youtubei.js/dist/src/parser/ytkids";
+import Innertube, {Player} from './react-native';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -58,28 +64,19 @@ function App(): JSX.Element {
 
   useEffect(() => {
     const init = async () => {
-      const youtube = await Innertube.create({
+      const youtube = await Innertube.create({ cache: undefined });
 
-      });
-      // youtube.getHomeFeed().catch(console.warn).then(v => console.log(JSON.stringify(v, null, 4)))
-      // youtube
-      //   .getTrending()
-      //   .catch(console.warn)
-      //   .then(v => console.log(JSON.stringify(v, null, 4)));
-      youtube
-        .getBasicInfo('iasbPFjuQZU')
+      youtube.getStreamingData('iasbPFjuQZU', {format: 'video'})
+        .then(async value => {
+          console.log(value)
+          const player = await Player.create(undefined, fetch);
+          console.log("Player created")
+          const decrypt = value.decipher(player);
+          console.log("Decrypt: ", decrypt);
+        })
         .catch(console.warn)
-        .then(v => {
-          const video = v as VideoInfo
-          // console.log(JSON.stringify(v, null, 4))
-          if (v instanceof VideoInfo) {
-            // v.toDash().catch(console.warn).then(url => console.log(url))
-          }
-          const format = video.chooseFormat({type: "video+audio", client: "TV_EMBEDDED"})
-          console.log('Format: ', console.log(JSON.stringify(format, null, 4)));
-        });
-    }
-    init();
+    };
+    init().catch(console.warn);
   }, []);
 
   return (
