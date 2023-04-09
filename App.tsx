@@ -69,9 +69,8 @@ function App(): JSX.Element {
       youtube.getStreamingData('iasbPFjuQZU', {format: 'video'})
         .then(async value => {
           console.log(value)
-          const player = await Player.create(undefined, fetch);
-          console.log("Player created")
-          const decrypt = value.decipher(player);
+          console.log("Player: ", JSON.stringify(youtube.actions.session.player))
+          const decrypt = value.decipher(youtube.actions.session.player);
           console.log("Decrypt: ", decrypt);
         })
         .catch(console.warn)

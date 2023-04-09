@@ -6,7 +6,7 @@ import crypto from 'react-native-quick-crypto';
 import { FetchFunction } from 'youtubei.js/dist/src/types/PlatformShim.js';
 import DOMParser from 'youtubei.js/dist/src/platform/polyfills/server-dom.js';
 import CustomEvent from 'youtubei.js/dist/src/platform/polyfills/node-custom-event.js';
-import evaluate from 'youtubei.js/dist/src/platform/jsruntime/jinter.js';
+import evaluate from './jinterMetro';
 
 import RNFS from 'react-native-fs';
 
